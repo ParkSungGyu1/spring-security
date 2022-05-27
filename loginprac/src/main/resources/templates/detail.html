@@ -99,15 +99,14 @@
                 "description":description,
                 "password":password
             };
-            console.log(description)
             $.ajax({
                 type: "PUT",
-                url: '/post/detail/change',
+                url: '/notice/detail/change',
                 contentType: "application/json",
                 data: JSON.stringify(jsonData),
                 success: function (response) {
                     alert("게시글이 수정 되었습니다.")
-                    window.location.href = "/post/detail?id="+id
+                    window.location.href = "/notice/detail/"+id
                 }
             })
         }
@@ -118,15 +117,16 @@
             let jsonData = { // Body에 첨부할 json 데이터
                 "id":id,
                 "password":password,
-                "result":1
+                "result":false
             };
             $.ajax({
                 type: "POST",
-                url: '/post/detail/password',
+                url: '/notice/detail/password',
                 contentType: "application/json",
                 data: JSON.stringify(jsonData),
                 success: function (response) {
-                    if(response["result"] == 1){
+                    console.log(response)
+                    if(response){
                         $("#changediv").show();
                     }else{
                         alert("비밀번호가 틀립니다.")
@@ -146,11 +146,12 @@
             };
             $.ajax({
                 type: "POST",
-                url: '/post/detail/password',
+                url: '/notice/detail/password',
                 contentType: "application/json",
                 data: JSON.stringify(jsonData),
                 success: function (response) {
-                    if(response["result"] == 1){
+                    console.log(response)
+                    if(response){
                         $("#changediv2").show();
                     }else{
                         alert("비밀번호가 틀립니다.")
@@ -169,7 +170,7 @@
 
             $.ajax({
                 type: "DELETE",
-                url: '/post/detail/delete',
+                url: '/notice/detail/delete',
                 contentType: "application/json",
                 data: JSON.stringify(jsonData),
                 success: function (response) {
