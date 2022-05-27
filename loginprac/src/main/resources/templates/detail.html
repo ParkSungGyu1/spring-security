@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <title>보나 팬명록 | 보나를 응원합니다.</title>
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .mytitle {
+
+            background-color: green;
+
+            width: 100%;
+            height: 250px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://cdn.topstarnews.net/news/photo/202202/14668200_756403_5636.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .wrap {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .quotegroup {
+            max-width: 500px;
+            width: 95%;
+            height: 200px;
+            margin-top: 10px;
+        }
+
+        .mypost {
+            max-width: 500px;
+            width: 95%;
+            margin: 20px auto 0px auto;
+            box-shadow: 0px 0px 3px 0px gray;
+            padding: 20px;
+        }
+
+        .btngroup {
+            margin-top: 20px;
+
+        }
+
+        .rcbtn {
+            color: white;
+            background-color: black;
+            border: 1px solid black;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+
+        .rcbtn:hover {
+            border: 2px solid black;
+        }
+
+        #changediv{
+            display: none;
+        }
+        #changediv2{
+            display: none;
+        }
+    </style>
+    <script>
+
+        function gotolist() {
+            window.location.href = "/"
+        }
+        function changepost(){
+            let id = $("#id").text()
+            let title = $("#title").val()
+            let username = $("#username").val()
+            let description = $("#description").val()
+            let password = $("#password").val()
+            let jsonData = { // Body에 첨부할 json 데이터
+                "id":id,
+                "username":username,
+                "title":title,
+                "description":description,
+                "password":password
+            };
+            console.log(description)
+            $.ajax({
+                type: "PUT",
+                url: '/post/detail/change',
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                    alert("게시글이 수정 되었습니다.")
+                    window.location.href = "/post/detail?id="+id
+                }
+            })
+        }
+        function passwordcheck() {
+            let password = $("#password").val()
+
+            let id = $("#id").text()
+            let jsonData = { // Body에 첨부할 json 데이터
+                "id":id,
+                "password":password,
+                "result":1
+            };
+            $.ajax({
+                type: "POST",
+                url: '/post/detail/password',
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                    if(response["result"] == 1){
+                        $("#changediv").show();
+                    }else{
+                        alert("비밀번호가 틀립니다.")
+                    }
+                }
+            })
+        }
+
+        function passwordcheck2() {
+            let password = $("#password").val()
+
+            let id = $("#id").text()
+            let jsonData = { // Body에 첨부할 json 데이터
+                "id":id,
+                "password":password,
+                "result":1
+            };
+            $.ajax({
+                type: "POST",
+                url: '/post/detail/password',
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                    if(response["result"] == 1){
+                        $("#changediv2").show();
+                    }else{
+                        alert("비밀번호가 틀립니다.")
+                    }
+                }
+            })
+        }
+        function deletepost(){
+            let password = $("#password").val()
+            let id = $("#id").text()
+            let jsonData = { // Body에 첨부할 json 데이터
+                "id":id,
+                "password":password,
+                "result":1
+            };
+
+            $.ajax({
+                type: "DELETE",
+                url: '/post/detail/delete',
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                        alert("성공적으로 삭제 되었습니다.")
+                        window.location.href = "/"
+
+                    }
+            })
+        }
+    </script>
+</head>
+
+<body>
+<div class="mytitle">
+    <h1 style="color: white">보나의 팬명록❤️</h1>
+</div>
+<div class="wrap">
+    <div class="mypost">
+        <div class="quotegroup">
+            <div class="mb-2 card">
+                <div class="card-body">
+                    <blockquote th:each="lists : ${list}" class="blockquote mb-0">
+                        <p id="id" style="display: none;" th:text="${lists.id}"></p>
+                        <p th:text="${lists.title}"></p>
+                        <p th:text="${lists.description}"></p>
+                        <footer th:text="${lists.username}" class="blockquote-footer">작성자</footer>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="password" class="mt-3 form-control" id="password" placeholder="name@example.com">
+            <label for="password">비밀번호</label>
+        </div>
+
+        <div class="btngroup">
+            <button type="button" onclick="gotolist()" class="rcbtn">목록</button>
+            <button type="button" onclick="passwordcheck()" class="rcbtn">수정</button>
+            <button type="button" onclick="passwordcheck2()" class="rcbtn">삭제</button>
+
+        </div>
+
+
+    </div>
+    <div class="mypost" id = "changediv">
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="username" placeholder="name@example.com">
+            <label for="username">이름</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="title" placeholder="name@example.com">
+            <label for="title">제목</label>
+        </div>
+
+        <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here"
+                                  id="description"></textarea>
+            <label for="description">내용</label>
+        </div>
+
+        <div class="btngroup">
+            <button type="button" class="rcbtn" onclick="changepost()">수정하기</button>
+        </div>
+    </div>
+
+    <div class="mypost" id = "changediv2">
+        <div class="btngroup">
+            <button type="button" class="rcbtn" onclick="deletepost()">정말로 삭제하시겠습니까?</button>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>
