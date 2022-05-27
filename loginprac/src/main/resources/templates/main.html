@@ -107,6 +107,7 @@
 
                         $('#cardgroup').append(temp_html)
                     }
+
                 }
             })
         }
@@ -137,10 +138,13 @@
 <body>
 <div class="mytitle">
     <h1 style="color: white">보나의 팬명록❤️</h1>
+    <form id="my_form" method="post" action="/user/logout">
+        <a id="logout-text" href="javascript:{}" onclick="document.getElementById('my_form').submit();">로그아웃</a>
+    </form>
 </div>
 <div class="wrap">
     <div class="mypost">
-
+        <span th:text="${username}"></span>
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="name" placeholder="name@example.com">
             <label for="name">이름</label>

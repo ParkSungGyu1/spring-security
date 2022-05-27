@@ -1,8 +1,10 @@
 package com.spring.loginprac.controller;
 
 import com.spring.loginprac.model.Notice;
+import com.spring.loginprac.security.UserDetailImpl;
 import com.spring.loginprac.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +21,8 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String mainView(){
+    public String mainView(Model model, @AuthenticationPrincipal UserDetailImpl userDetails){
+        model.addAttribute("username",userDetails.getUsername());
         return "main";
     }
 
@@ -27,6 +30,7 @@ public class HomeController {
     public String detailView(@PathVariable Long id, Model model){
         Notice notice = noticeService.detailView(id);
         model.addAttribute("list", notice);
+
 
         return "detail";
     }
