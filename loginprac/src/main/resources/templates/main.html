@@ -72,23 +72,41 @@
 
     </style>
     <script>
+        $(document).ready(function () {
+            postview()
+        });
 
         function detailview(id) {
             $.ajax({
                 type: "GET",
-                url: '/post/detail?id='+id,
+                url: '/notice/detail/'+id,
                 success: function (response) {
-                    window.location.href ='/post/detail?id='+id
+                    window.location.href = '/notice/detail/'+id
                 }
             })
         }
 
          function postview() {
+
             $.ajax({
                 type: "GET",
-                url: '/post',
+                url: '/notice',
                 success: function (response) {
-                    window.location.reload()
+                    for(let i = 0; i < response.length; i++){
+                        let title = response[i]['title']
+                        let username = response[i]['username']
+                        let id = response[i]['id']
+                        let temp_html = ` <div class="mb-2 card" onclick="detailview(${id})" >
+                                            <div class="card-body">
+                                                <blockquote class="blockquote mb-0">
+                                                    <p >${title}</p>
+                                                    <footer class="blockquote-footer" >${username}</footer>
+                                                </blockquote>
+                                            </div>
+                                        </div>`
+
+                        $('#cardgroup').append(temp_html)
+                    }
                 }
             })
         }
@@ -105,7 +123,7 @@
             };
             $.ajax({
                 type: "POST",
-                url: '/post/write',
+                url: '/notice/write',
                 contentType: "application/json",
                 data: JSON.stringify(jsonData),
                 success: function (response) {
@@ -150,18 +168,8 @@
 
 
     </div>
-    <div class="quotegroup">
+    <div class="quotegroup" id = "cardgroup">
 
-
-
-        <div class="mb-2 card" th:each="post : ${posts}">
-            <div th:attr="onclick=|detailview('${post.id}')|" class="card-body">
-                <blockquote class="blockquote mb-0">
-                    <p th:text = "${post.title}"></p>
-                    <footer class="blockquote-footer" th:text = "${post.username}"></footer>
-                </blockquote>
-            </div>
-        </div>
     </div>
 
 

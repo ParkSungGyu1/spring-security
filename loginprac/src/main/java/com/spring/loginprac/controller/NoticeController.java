@@ -29,10 +29,10 @@ public class NoticeController {
 
     //게시글 디테일 확인
     //PathVariable 하는법  ==> /notice/detail/1
-    @GetMapping("/notice/detail/{id}")
+    /*@GetMapping("/notice/detail/{id}")
     public Notice detailView(@PathVariable Long id){
         return noticeService.detailView(id);
-    }
+    }*/
 
     //RequestParam 하는법  ==> /notice/detail?id=1
     /*@GetMapping("/notice/detail")
