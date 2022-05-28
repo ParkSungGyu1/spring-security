@@ -46,6 +46,8 @@ public class NoticeService {
         return passwordCheckDto;
     }
 
+
+    
     public void noticeChange(NoticeChangeDto noticeChangeDto) {
         Notice notice = noticeRepository.findById(noticeChangeDto.getId())
                 .orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다."));
