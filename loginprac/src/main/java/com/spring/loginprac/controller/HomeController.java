@@ -1,7 +1,8 @@
 package com.spring.loginprac.controller;
 
 import com.spring.loginprac.model.Notice;
-import com.spring.loginprac.security.UserDetailImpl;
+import com.spring.loginprac.model.UserRoleEnum;
+import com.spring.loginprac.security.UserDetailsImpl;
 import com.spring.loginprac.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,8 +22,14 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String mainView(Model model, @AuthenticationPrincipal UserDetailImpl userDetails){
-        model.addAttribute("username",userDetails.getUsername());
+    public String home(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model){
+        if (userDetails != null) {
+            model.addAttribute("username", userDetails.getUsername());
+
+            if (userDetails.getUser().getRole() == UserRoleEnum.ADMIN) {
+                model.addAttribute("admin_role", true);
+            }
+        }
         return "main";
     }
 

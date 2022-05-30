@@ -1,16 +1,19 @@
 package com.spring.loginprac.security;
 
+import com.spring.loginprac.model.UserRoleEnum;
 import com.spring.loginprac.model.Users;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class UserDetailImpl implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
     private final Users user;
 
-    public UserDetailImpl(Users user) {
+    public UserDetailsImpl(Users user) {
         this.user = user;
     }
 
@@ -50,6 +53,13 @@ public class UserDetailImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        UserRoleEnum role = user.getRole();
+        String authority = role.getAuthority();
+
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(simpleGrantedAuthority);
+
+        return authorities;
     }
 }

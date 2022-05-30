@@ -49,7 +49,7 @@
                  data: JSON.stringify(jsonData),
                  success: function (response) {
                      if(response == "회원가입이 완료 되었습니다."){
-                         window.location.href = "/"
+                         window.location.href = "/user/loginView"
                      }else{
                          let temp_html = response
                          $("#signup-result").append(temp_html)
