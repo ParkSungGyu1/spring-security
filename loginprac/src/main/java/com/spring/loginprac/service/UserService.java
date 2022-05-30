@@ -23,6 +23,7 @@ public class UserService {
     public String signup(SignupRequestDto signupRequestDto) {
         String username = signupRequestDto.getUsername();
         String row_password = signupRequestDto.getPassword();
+        String re_password = signupRequestDto.getRepassword();
         //패스워드 형식 확인
         //최소 3자 이상, 알파벳 대소문자(a~z, A~Z), 숫자(0~9)로 구성하기
         if(username.length() < 3){
@@ -36,32 +37,35 @@ public class UserService {
         if(row_password.equals(username)){
             return "닉네임과 패스워드는 다르게 해주세요.";
         }
-        
 
-        if(Pattern.matches( "^[a-zA-Z0-9]*$",username)){
-            String password = passwordEncoder.encode(row_password);
-            String email = signupRequestDto.getEmail();
-            UserRoleEnum role = UserRoleEnum.USER;
+        if(row_password.equals(re_password)){
+            if(Pattern.matches( "^[a-zA-Z0-9]*$",username)){
+                String password = passwordEncoder.encode(row_password);
+                String email = signupRequestDto.getEmail();
+                UserRoleEnum role = UserRoleEnum.USER;
 
-            Optional<Users> found = userRepository.findByUsername(username);
+                Optional<Users> found = userRepository.findByUsername(username);
 
-            if(found.isPresent()){
-                throw new IllegalArgumentException("중복된 ID가 존재합니다.");
-            }
-
-
-            if(signupRequestDto.isAdmin()){
-                if(!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)){
-                    throw new IllegalArgumentException("관리자 암호가 틀립니다.");
+                if(found.isPresent()){
+                    throw new IllegalArgumentException("중복된 ID가 존재합니다.");
                 }
-                role = UserRoleEnum.ADMIN;
-            }
 
-            Users users = new Users(username, password, email, role);
-            userRepository.save(users);
-            return "회원가입이 완료 되었습니다.";
-        }else {
-            return "아이디는 영문, 숫자를 혼합해 주세요";
+
+                if(signupRequestDto.isAdmin()){
+                    if(!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)){
+                        throw new IllegalArgumentException("관리자 암호가 틀립니다.");
+                    }
+                    role = UserRoleEnum.ADMIN;
+                }
+
+                Users users = new Users(username, password, email, role);
+                userRepository.save(users);
+                return "회원가입이 완료 되었습니다.";
+            }else {
+                return "아이디는 영문, 숫자를 혼합해 주세요";
+            }
+        }else{
+            return "비밀번호가 같지 않습니다.";
         }
 
     }
