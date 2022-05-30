@@ -211,6 +211,7 @@
             <button type="button" onclick="gotolist()" class="rcbtn">목록</button>
             <button type="button" onclick="passwordcheck()" class="rcbtn">수정</button>
             <button type="button" onclick="passwordcheck2()" class="rcbtn">삭제</button>
+            <button type="button"  class="rcbtn">댓글</button>
 
         </div>
 
@@ -244,7 +245,20 @@
             <button type="button" class="rcbtn" onclick="deletepost()">정말로 삭제하시겠습니까?</button>
         </div>
     </div>
-
+    <div class="quotegroup" id = "cardgroup">
+        <div class="mb-2 card" >
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p >${title}</p>
+                    <footer class="blockquote-footer" >${username}</footer>
+                    <div class="btngroup">
+                        <button type="button" class="rcbtn" onclick="">수정</button>
+                        <button type="button" class="rcbtn" onclick="">삭제</button>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 
