@@ -5,13 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class NoticeDto {
-    private String username;
+public class NoticeWriteDto {
     private String title;
     private String description;
 }

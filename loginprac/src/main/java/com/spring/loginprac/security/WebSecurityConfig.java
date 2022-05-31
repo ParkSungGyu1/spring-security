@@ -1,7 +1,5 @@
 package com.spring.loginprac.security;
 
-import com.spring.loginprac.security.FilterSkipMatcher;
-import com.spring.loginprac.security.FormLoginSuccessHandler;
 import com.spring.loginprac.security.filter.FormLoginFilter;
 import com.spring.loginprac.security.filter.JwtAuthFilter;
 import com.spring.loginprac.security.jwt.HeaderTokenExtractor;
@@ -68,19 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        /*
-         * 1.
-         * UsernamePasswordAuthenticationFilter 이전에 FormLoginFilter, JwtFilter 를 등록합니다.
-         * FormLoginFilter : 로그인 인증을 실시합니다.
-         * JwtFilter       : 서버에 접근시 JWT 확인 후 인증을 실시합니다.
-         */
-        http
-                .addFilterBefore(formLoginFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
-
         http.authorizeRequests()
-                .anyRequest()
-                .permitAll()
+                .anyRequest().permitAll() //
                 .and()
                 // [로그아웃 기능]
                 .logout()
@@ -91,6 +78,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 // "접근 불가" 페이지 URL 설정
                 .accessDeniedPage("/forbidden.html");
+
+        /*
+         * 1.
+         * UsernamePasswordAuthenticationFilter 이전에 FormLoginFilter, JwtFilter 를 등록합니다.
+         * FormLoginFilter : 로그인 인증을 실시합니다.
+         * JwtFilter       : 서버에 접근시 JWT 확인 후 인증을 실시합니다.
+         */
+        http
+                .addFilterBefore(formLoginFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+
+
     }
 
     @Bean
@@ -126,9 +125,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/user/**");
         skipPathList.add("POST,/user/signup");
 
-        // notice API 허용
         skipPathList.add("GET,/notice/**");
-        skipPathList.add("POST,/notice/**");
 
         skipPathList.add("GET,/");
         skipPathList.add("GET,/basic.js");

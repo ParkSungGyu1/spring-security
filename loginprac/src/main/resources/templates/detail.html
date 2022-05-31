@@ -81,12 +81,32 @@
         #changediv2{
             display: none;
         }
+        #commentdiv{
+            display: none;
+        }
     </style>
     <script>
+        $(document).ready(function () {
+            if ($.cookie('token')) {
+                console.log("통과")
+                $.ajaxSetup({
+                    headers: {
+                        'Authorization': $.cookie('token')
+                    }
+                })
+            } else {
+                console.log("불통")
+                window.location.href = '/user/loginView';
+            }
 
+            commentView()
+        });
         function gotolist() {
             window.location.href = "/"
         }
+
+
+
         function changepost(){
             let id = $("#id").text()
             let title = $("#title").val()
@@ -160,6 +180,66 @@
                 }
             })
         }
+        function comment(){
+            $("#commentdiv").show();
+        }
+
+        function commentnotice(){
+            let date = new Date();
+            let id = $("#id").text()
+            let comment = $("#comment").val()
+
+            let jsonData = { // Body에 첨부할 json 데이터
+                "id":id,
+                "comment":comment,
+                "date":date
+            };
+            $.ajax({
+                type: "POST",
+                url: '/notice/comment',
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                    alert("댓글이 작성 되었습니다.")
+                    window.location.reload()
+
+                }
+            })
+        }
+
+        function commentView(){
+            let id = $("#id").text()
+
+            $.ajax({
+                type: "GET",
+                url: '/notice/detail/comment/'+id,
+                success: function (response) {
+                    for(let i = 0; i < response.length; i++){
+                        let username = response[i]['username']
+                        let comment = response[i]['comment']
+                        let date = response[i]['date']
+                        let temp_html = `<div class="mb-2 card" >
+                                            <div class="card-body">
+                                                <blockquote class="blockquote mb-0">
+                                                    <p class="text-end fs-6 fst-italic" >${date}</p>
+                                                    <p class="fs-3">${comment}</p>
+                                                    <footer class="blockquote-footer mt-2" >${username}</footer>
+                                                    <div class="btngroup">
+                                                        <button type="button" class="rcbtn" onclick="">수정</button>
+                                                        <button type="button" class="rcbtn" onclick="">삭제</button>
+
+                                                    </div>
+                                                </blockquote>
+                                            </div>
+                                        </div>`
+                        $("#cardgroup").append(temp_html)
+                    }
+
+
+
+                }
+            })
+        }
         function deletepost(){
             let password = $("#password").val()
             let id = $("#id").text()
@@ -203,16 +283,12 @@
             </div>
         </div>
 
-        <div class="form-floating mb-3">
-            <input type="password" class="mt-3 form-control" id="password" placeholder="name@example.com">
-            <label for="password">비밀번호</label>
-        </div>
 
         <div class="btngroup">
             <button type="button" onclick="gotolist()" class="rcbtn">목록</button>
             <button type="button" onclick="passwordcheck()" class="rcbtn">수정</button>
             <button type="button" onclick="passwordcheck2()" class="rcbtn">삭제</button>
-            <button type="button"  class="rcbtn">댓글</button>
+            <button type="button" onclick="comment()" class="rcbtn">댓글</button>
 
         </div>
 
@@ -240,6 +316,18 @@
             <button type="button" class="rcbtn" onclick="changepost()">수정하기</button>
         </div>
     </div>
+    <div class="mypost" id = "commentdiv">
+
+                <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here"
+                                  id="comment"></textarea>
+            <label for="description">댓글을 작성하세요</label>
+        </div>
+
+        <div class="btngroup">
+            <button type="button" class="rcbtn" onclick="commentnotice()">댓글달기</button>
+        </div>
+    </div>
 
     <div class="mypost" id = "changediv2">
         <div class="btngroup">
@@ -247,18 +335,7 @@
         </div>
     </div>
     <div class="quotegroup" id = "cardgroup">
-        <div class="mb-2 card" >
-            <div class="card-body">
-                <blockquote class="blockquote mb-0">
-                    <p >${title}</p>
-                    <footer class="blockquote-footer" >${username}</footer>
-                    <div class="btngroup">
-                        <button type="button" class="rcbtn" onclick="">수정</button>
-                        <button type="button" class="rcbtn" onclick="">삭제</button>
-                    </div>
-                </blockquote>
-            </div>
-        </div>
+
     </div>
 </div>
 </body>

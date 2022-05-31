@@ -1,11 +1,14 @@
 package com.spring.loginprac.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.loginprac.dto.NoticeDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter // get 함수를 일괄적으로 만들어줍니다.
@@ -22,17 +25,14 @@ public class Notice {
     private String username;
 
     @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String description;
 
+
     public Notice(NoticeDto noticeDto) {
         this.username = noticeDto.getUsername();
-        this.password = noticeDto.getPassword();
         this.title = noticeDto.getTitle();
         this.description = noticeDto.getDescription();
 

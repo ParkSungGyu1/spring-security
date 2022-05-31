@@ -33,6 +33,7 @@ public class HomeController {
         return "main";
     }
 
+
     @GetMapping("/notice/detail/{id}")
     public String detailView(@PathVariable Long id, Model model){
         Notice notice = noticeService.detailView(id);

@@ -96,7 +96,11 @@
                     const isAdmin = !!response.admin;
 
                     if (!username) {
-
+                        $("#user").hide()
+                        $("#guest").show()
+                    }else{
+                        $("#guest").hide()
+                        $("#user").show()
                     }
 
                     $('#username').text(username);
@@ -145,13 +149,9 @@
             })
         }
         function postwrite() {
-            let username = $("#name").val();
-            let password = $("#password").val();
             let title = $("#title").val();
             let description = $("#description").val();
             var jsonData = { // Body에 첨부할 json 데이터
-                "username":username,
-                "password":password,
                 "title":title,
                 "description":description
             };
@@ -176,12 +176,9 @@
     </form>
 </div>
 <div class="wrap">
-    <div class="mypost">
+    <div class="mypost" id = "user">
         <span id="username"></span>
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="name" placeholder="name@example.com">
-            <label for="name">이름</label>
-        </div>
+        <span>님 안녕하세요     응원의 글 한마디를 남겨주세요❤️</span>
 
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="title" placeholder="name@example.com">
@@ -194,15 +191,16 @@
             <label for="description">내용</label>
         </div>
 
-        <div class="form-floating mb-3">
-            <input type="password" class="mt-3 form-control" id="password" placeholder="name@example.com">
-            <label for="password">비밀번호</label>
-        </div>
 
         <div class="btngroup">
             <button type="button" class="rcbtn" onclick="postwrite()">글 남기기</button>
         </div>
 
+
+    </div>
+    <div class="mypost" id = "guest">
+
+        <a href="/user/loginView">글을 남기시려면 로그인 해주세요❤️</a>
 
     </div>
     <div class="quotegroup" id = "cardgroup">

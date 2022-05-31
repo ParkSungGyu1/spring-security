@@ -1,12 +1,12 @@
 package com.spring.loginprac.controller;
 
-import com.spring.loginprac.dto.NoticeChangeDto;
-import com.spring.loginprac.dto.NoticeDeleteDto;
-import com.spring.loginprac.dto.NoticeDto;
-import com.spring.loginprac.dto.PasswordCheckDto;
+import com.spring.loginprac.dto.*;
+import com.spring.loginprac.model.Comment;
 import com.spring.loginprac.model.Notice;
+import com.spring.loginprac.security.UserDetailsImpl;
 import com.spring.loginprac.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,12 +62,26 @@ public class NoticeController {
 
     //저장 기능 ==> 저장이 완료 되었을 때 Http 상태를 리턴하고 싶다.
     @PostMapping("/notice/write")
-    public String noticeWrite(@RequestBody NoticeDto noticeDto){
+    public String noticeWrite(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody NoticeWriteDto noticeWriteDto){
+
+        NoticeDto noticeDto = new NoticeDto();
+
+        noticeDto.setUsername(userDetails.getUser().getUsername());
+
+
+        noticeDto.setTitle(noticeWriteDto.getTitle());
+        noticeDto.setDescription(noticeWriteDto.getDescription());
         noticeService.noticeWrite(noticeDto);
+
         return "1";
     }
 
 
+    //댓글 보기
+    @GetMapping("/notice/detail/comment/{id}")
+    public List<Comment> commentView(@PathVariable Long id){
+        return noticeService.commentView(id);
+    }
 
 
 }

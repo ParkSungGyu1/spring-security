@@ -1,11 +1,11 @@
 package com.spring.loginprac.service;
 
-import com.spring.loginprac.dto.NoticeChangeDto;
-import com.spring.loginprac.dto.NoticeDeleteDto;
-import com.spring.loginprac.dto.NoticeDto;
-import com.spring.loginprac.dto.PasswordCheckDto;
+import com.spring.loginprac.dto.*;
+import com.spring.loginprac.model.Comment;
 import com.spring.loginprac.model.Notice;
+import com.spring.loginprac.repository.CommentRepository;
 import com.spring.loginprac.repository.NoticeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +14,12 @@ import java.util.List;
 public class NoticeService {
 
     private final NoticeRepository noticeRepository;
+    private final CommentRepository commentRepository;
 
-    public  NoticeService(NoticeRepository noticeRepository){
+    @Autowired
+    public  NoticeService(NoticeRepository noticeRepository, CommentRepository commentRepository){
         this.noticeRepository = noticeRepository;
+        this.commentRepository = commentRepository;
     }
     public List<Notice> noticeView() {
         return noticeRepository.findAll();
@@ -37,11 +40,7 @@ public class NoticeService {
     public PasswordCheckDto passwordCheck(PasswordCheckDto passwordCheckDto) {
         Notice noticeDto = noticeRepository.findById(passwordCheckDto.getId())
                 .orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다."));
-        if(noticeDto.getPassword().equals(passwordCheckDto.getPassword())){
-            passwordCheckDto.setResult(true);
-        }else{
-            passwordCheckDto.setResult(false);
-        }
+
 
         return passwordCheckDto;
     }
@@ -59,5 +58,12 @@ public class NoticeService {
 
     public void noticeDelete(NoticeDeleteDto noticeDeleteDto) {
         noticeRepository.delete(noticeRepository.findById(noticeDeleteDto.getId()).orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다.")));
+    }
+
+
+
+    public List<Comment> commentView(Long id) {
+        Notice notice = noticeRepository.findById(id).get();
+        return commentRepository.findCommentsByNotice(notice);
     }
 }
