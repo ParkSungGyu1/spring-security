@@ -31,8 +31,9 @@
              let password = $("#password").val();
              let repassword = $("#repassword").val();
              let email = $("#email").val();
-             let admin = $("#admin-check").attr('checked');
+             let admin = $("#admin-check").is(':checked');
              let adminToken = $("#admin-token").val();
+
              $("#signup-result").empty();
              var jsonData = { // Body에 첨부할 json 데이터
                  "username":username,

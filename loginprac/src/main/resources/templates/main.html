@@ -96,7 +96,7 @@
                     const isAdmin = !!response.admin;
 
                     if (!username) {
-                        window.location.href = '/user/loginView';
+
                     }
 
                     $('#username').text(username);
@@ -106,6 +106,7 @@
                     window.location.href = '/user/loginView';
                 }
             })
+            postview()
         });
 
         function detailview(id) {
