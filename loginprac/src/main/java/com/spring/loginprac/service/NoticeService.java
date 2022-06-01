@@ -56,6 +56,7 @@ public class NoticeService {
         noticeRepository.save(notice);
     }
 
+
     public void noticeDelete(Long id) {
         noticeRepository.delete(noticeRepository.findById(id).orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다.")));
     }
@@ -76,4 +77,11 @@ public class NoticeService {
         comment.setDate(commentRequestDto.getDate());
         commentRepository.save(comment);
     }
+    public void commentChange(CommentChangeDto commentChangeDto) {
+        Comment comment = commentRepository.findById(commentChangeDto.getId())
+                .orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다."));
+        comment.setComment(commentChangeDto.getComment());
+        commentRepository.save(comment);
+    }
+
 }

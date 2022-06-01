@@ -83,5 +83,9 @@ public class NoticeController {
         noticeService.commentWrite(commentRequestDto);
         return "1";
     }
-
+    @PatchMapping("/notice/comment/change")
+    public String commentChange(@RequestBody CommentChangeDto commentChangeDto){
+        noticeService.commentChange(commentChangeDto);
+        return "1";
+    }
 }

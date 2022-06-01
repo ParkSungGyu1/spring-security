@@ -82,13 +82,17 @@
         #changediv2 {
             display: none;
         }
-
+        #changediv3 {
+            display: none;
+        }
         #commentdiv {
             display: none;
         }
+
     </style>
     <script>
         let tokenname = ""
+        let commentchangeval = ""
         $(document).ready(function () {
             if ($.cookie('token')) {
                 console.log("통과")
@@ -130,6 +134,29 @@
                 data: JSON.stringify(jsonData),
                 success: function (response) {
                     alert("게시글이 수정 되었습니다.")
+                    window.location.reload()
+                }
+            })
+        }
+        function commentchange(n){
+            commentchangeval = n
+            $("#changediv3").show()
+        }
+        function changecomment(){
+            let commentid = $('#'+ commentchangeval).text()
+            let commentchange = $("#commentchange").val()
+
+            let jsonData = { // Body에 첨부할 json 데이터
+                "id":commentid,
+                "comment":commentchange
+            };
+            $.ajax({
+                type: "PATCH",
+                url: '/notice/comment/change',
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                    alert("댓글이 수정 되었습니다.")
                     window.location.reload()
                 }
             })
@@ -209,15 +236,17 @@
                         let username = response[i]['username']
                         let comment = response[i]['comment']
                         let date = response[i]['date']
+                        let commentid = response[i]['id']
                         if (username == tokenname || username == "admin") {
                             let temp_html = `<div class="mb-2 card" >
                                             <div class="card-body">
                                                 <blockquote class="blockquote mb-0">
                                                     <p class="text-end fs-6 fst-italic" >${date}</p>
+                                                    <p id="${i}" style="display: none">${commentid}</p>
                                                     <p class="fs-3">${comment}</p>
                                                     <footer class="commentuser blockquote-footer mt-2" >${username}</footer>
                                                     <div class="btngroup">
-                                                        <button type="button" class="commentchangebtn rcbtn" onclick="">수정</button>
+                                                        <button type="button" class="commentchangebtn rcbtn" onclick="commentchange(${i})">수정</button>
                                                         <button type="button" class="commentdeletebtn rcbtn" onclick="">삭제</button>
 
                                                     </div>
@@ -327,6 +356,21 @@
 
         <div class="btngroup">
             <button type="button" class="rcbtn" onclick="changewrite()">수정하기</button>
+        </div>
+
+
+    </div>
+    <div class="mypost" id="changediv3">
+
+        <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here"
+                                  id="commentchange"></textarea>
+            <label for="description">내용</label>
+        </div>
+
+
+        <div class="btngroup">
+            <button type="button" class="rcbtn" onclick="changecomment()">수정하기</button>
         </div>
 
 
