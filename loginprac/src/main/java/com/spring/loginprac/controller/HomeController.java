@@ -1,5 +1,6 @@
 package com.spring.loginprac.controller;
 
+import com.spring.loginprac.dto.CommentRequestDto;
 import com.spring.loginprac.model.Notice;
 import com.spring.loginprac.model.UserRoleEnum;
 import com.spring.loginprac.security.UserDetailsImpl;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class HomeController {
@@ -42,5 +45,7 @@ public class HomeController {
 
         return "detail";
     }
+
+
 
 }

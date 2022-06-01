@@ -54,9 +54,9 @@ public class NoticeController {
     }
 
     //게시글 삭제
-    @DeleteMapping("/notice/detail/delete")
-    public String noticeDelete(@RequestBody NoticeDeleteDto noticeDeleteDto){
-        noticeService.noticeDelete(noticeDeleteDto);
+    @DeleteMapping("/notice/detail/delete/{id}")
+    public String noticeDelete(@PathVariable Long id){
+        noticeService.noticeDelete(id);
         return "1";
     }
 
@@ -83,5 +83,10 @@ public class NoticeController {
         return noticeService.commentView(id);
     }
 
+    @PostMapping("/notice/detail/comment")
+    public String commentWrite(@RequestBody CommentRequestDto commentRequestDto){
+        noticeService.commentWrite(commentRequestDto);
+        return "1";
+    }
 
 }

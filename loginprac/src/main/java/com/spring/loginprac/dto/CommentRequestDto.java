@@ -13,6 +13,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class CommentRequestDto {
+    private Long id;
     private String username;
     private String comment;
     private Date date;

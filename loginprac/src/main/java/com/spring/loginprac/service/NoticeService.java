@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NoticeService {
@@ -56,8 +57,8 @@ public class NoticeService {
         noticeRepository.save(notice);
     }
 
-    public void noticeDelete(NoticeDeleteDto noticeDeleteDto) {
-        noticeRepository.delete(noticeRepository.findById(noticeDeleteDto.getId()).orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다.")));
+    public void noticeDelete(Long id) {
+        noticeRepository.delete(noticeRepository.findById(id).orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다.")));
     }
 
 
@@ -65,5 +66,15 @@ public class NoticeService {
     public List<Comment> commentView(Long id) {
         Notice notice = noticeRepository.findById(id).get();
         return commentRepository.findCommentsByNotice(notice);
+    }
+
+    public void commentWrite(CommentRequestDto commentRequestDto) {
+        Optional<Notice> notice = noticeRepository.findById(commentRequestDto.getId());
+        Comment comment = new Comment();
+        comment.setNotice(notice.get());
+        comment.setComment(commentRequestDto.getComment());
+        comment.setUsername(commentRequestDto.getUsername());
+        comment.setDate(commentRequestDto.getDate());
+        commentRepository.save(comment);
     }
 }

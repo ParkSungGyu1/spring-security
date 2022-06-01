@@ -1,5 +1,6 @@
 package com.spring.loginprac.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.loginprac.dto.NoticeDto;
 import lombok.Getter;
@@ -30,6 +31,9 @@ public class Notice {
     @Column(nullable = false)
     private String description;
 
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.REMOVE)
+    @JsonBackReference
+    private List<Comment> comments = new ArrayList<>();
 
     public Notice(NoticeDto noticeDto) {
         this.username = noticeDto.getUsername();

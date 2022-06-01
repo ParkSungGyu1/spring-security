@@ -1,6 +1,7 @@
 package com.spring.loginprac.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.loginprac.dto.NoticeDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class Comment {
     private Date date;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "post_id")
     private Notice notice;
 }

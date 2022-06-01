@@ -86,6 +86,7 @@
         }
     </style>
     <script>
+        let tokenname = ""
         $(document).ready(function () {
             if ($.cookie('token')) {
                 console.log("통과")
@@ -98,91 +99,51 @@
                 console.log("불통")
                 window.location.href = '/user/loginView';
             }
-
             commentView()
+            personalcheck()
         });
         function gotolist() {
             window.location.href = "/"
         }
 
+        function personalcheck(){
+            let noticeuser = $("#noticeuser").text()
 
-
-        function changepost(){
-            let id = $("#id").text()
-            let title = $("#title").val()
-            let username = $("#username").val()
-            let description = $("#description").val()
-            let password = $("#password").val()
-            let jsonData = { // Body에 첨부할 json 데이터
-                "id":id,
-                "username":username,
-                "title":title,
-                "description":description,
-                "password":password
-            };
-            $.ajax({
-                type: "PUT",
-                url: '/notice/detail/change',
-                contentType: "application/json",
-                data: JSON.stringify(jsonData),
-                success: function (response) {
-                    alert("게시글이 수정 되었습니다.")
-                    window.location.href = "/notice/detail/"+id
-                }
-            })
-        }
-        function passwordcheck() {
-            let password = $("#password").val()
-
-            let id = $("#id").text()
-            let jsonData = { // Body에 첨부할 json 데이터
-                "id":id,
-                "password":password,
-                "result":false
-            };
             $.ajax({
                 type: "POST",
-                url: '/notice/detail/password',
+                url: `/user/userinfo`,
                 contentType: "application/json",
-                data: JSON.stringify(jsonData),
                 success: function (response) {
-                    console.log(response)
-                    if(response){
-                        $("#changediv").show();
+                    tokenname = response.username;
+                    const isAdmin = !!response.admin;
+
+
+                    if (tokenname == noticeuser || isAdmin) {
+                        $("#changebtn").show()
+                        $("#deletebtn").show()
+
+
                     }else{
-                        alert("비밀번호가 틀립니다.")
+                        $("#changebtn").hide()
+                        $("#deletebtn").hide()
+
                     }
+
+
+                    $('#username').text(tokenname);
+
+                },
+                error: function() {
+                    window.location.href = '/user/loginView';
                 }
             })
         }
 
-        function passwordcheck2() {
-            let password = $("#password").val()
 
-            let id = $("#id").text()
-            let jsonData = { // Body에 첨부할 json 데이터
-                "id":id,
-                "password":password,
-                "result":1
-            };
-            $.ajax({
-                type: "POST",
-                url: '/notice/detail/password',
-                contentType: "application/json",
-                data: JSON.stringify(jsonData),
-                success: function (response) {
-                    console.log(response)
-                    if(response){
-                        $("#changediv2").show();
-                    }else{
-                        alert("비밀번호가 틀립니다.")
-                    }
-                }
-            })
-        }
         function comment(){
             $("#commentdiv").show();
         }
+
 
         function commentnotice(){
             let date = new Date();
@@ -190,13 +151,14 @@
             let comment = $("#comment").val()
 
             let jsonData = { // Body에 첨부할 json 데이터
-                "id":id,
+                "id" : id,
+                "username": tokenname,
                 "comment":comment,
                 "date":date
             };
             $.ajax({
                 type: "POST",
-                url: '/notice/comment',
+                url: '/notice/detail/comment',
                 contentType: "application/json",
                 data: JSON.stringify(jsonData),
                 success: function (response) {
@@ -218,21 +180,37 @@
                         let username = response[i]['username']
                         let comment = response[i]['comment']
                         let date = response[i]['date']
-                        let temp_html = `<div class="mb-2 card" >
+                        if(username == tokenname || username == "admin"){
+                            let temp_html = `<div class="mb-2 card" >
                                             <div class="card-body">
                                                 <blockquote class="blockquote mb-0">
                                                     <p class="text-end fs-6 fst-italic" >${date}</p>
                                                     <p class="fs-3">${comment}</p>
-                                                    <footer class="blockquote-footer mt-2" >${username}</footer>
+                                                    <footer class="commentuser blockquote-footer mt-2" >${username}</footer>
                                                     <div class="btngroup">
-                                                        <button type="button" class="rcbtn" onclick="">수정</button>
-                                                        <button type="button" class="rcbtn" onclick="">삭제</button>
+                                                        <button type="button" class="commentchangebtn rcbtn" onclick="">수정</button>
+                                                        <button type="button" class="commentdeletebtn rcbtn" onclick="">삭제</button>
 
                                                     </div>
                                                 </blockquote>
                                             </div>
                                         </div>`
-                        $("#cardgroup").append(temp_html)
+                            $("#cardgroup").append(temp_html)
+                        }else{
+                            let temp_html = `<div class="mb-2 card" >
+                                            <div class="card-body">
+                                                <blockquote class="blockquote mb-0">
+                                                    <p class="text-end fs-6 fst-italic" >${date}</p>
+                                                    <p class="fs-3">${comment}</p>
+                                                    <footer class="commentuser blockquote-footer mt-2" >${username}</footer>
+                                                </blockquote>
+                                            </div>
+                                        </div>`
+                            $("#cardgroup").append(temp_html)
+                        }
+
+
+
                     }
 
 
@@ -241,19 +219,10 @@
             })
         }
         function deletepost(){
-            let password = $("#password").val()
             let id = $("#id").text()
-            let jsonData = { // Body에 첨부할 json 데이터
-                "id":id,
-                "password":password,
-                "result":1
-            };
-
             $.ajax({
                 type: "DELETE",
-                url: '/notice/detail/delete',
-                contentType: "application/json",
-                data: JSON.stringify(jsonData),
+                url: '/notice/detail/delete/'+id,
                 success: function (response) {
                     alert("성공적으로 삭제 되었습니다.")
                     window.location.href = "/"
@@ -275,9 +244,9 @@
                 <div class="card-body">
                     <blockquote th:each="lists : ${list}" class="blockquote mb-0">
                         <p id="id" style="display: none;" th:text="${lists.id}"></p>
-                        <p th:text="${lists.title}"></p>
+                        <p  th:text="${lists.title}"></p>
                         <p th:text="${lists.description}"></p>
-                        <footer th:text="${lists.username}" class="blockquote-footer">작성자</footer>
+                        <footer id="noticeuser" th:text="${lists.username}" class="blockquote-footer">작성자</footer>
                     </blockquote>
                 </div>
             </div>
@@ -286,9 +255,9 @@
 
         <div class="btngroup">
             <button type="button" onclick="gotolist()" class="rcbtn">목록</button>
-            <button type="button" onclick="passwordcheck()" class="rcbtn">수정</button>
-            <button type="button" onclick="passwordcheck2()" class="rcbtn">삭제</button>
-            <button type="button" onclick="comment()" class="rcbtn">댓글</button>
+            <button type="button" id="changebtn" onclick="passwordcheck()" class="rcbtn">수정</button>
+            <button type="button" id="deletebtn" onclick="deletepost()" class="rcbtn">삭제</button>
+            <button type="button" id="commentbtn" onclick="comment()" class="rcbtn">댓글</button>
 
         </div>
 
@@ -329,11 +298,6 @@
         </div>
     </div>
 
-    <div class="mypost" id = "changediv2">
-        <div class="btngroup">
-            <button type="button" class="rcbtn" onclick="deletepost()">정말로 삭제하시겠습니까?</button>
-        </div>
-    </div>
     <div class="quotegroup" id = "cardgroup">
 
     </div>
