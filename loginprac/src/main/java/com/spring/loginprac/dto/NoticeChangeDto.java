@@ -12,7 +12,6 @@ import lombok.Setter;
 @Setter
 public class NoticeChangeDto {
     private Long id;
-    private String username;
     private String title;
     private String description;
 }

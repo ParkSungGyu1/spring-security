@@ -40,14 +40,9 @@ public class NoticeController {
         return noticeService.detailView(id);
     }*/
 
-    @PostMapping("/notice/detail/password")
-    public boolean passwordCheck(@RequestBody PasswordCheckDto passwordCheckDto){
-        PasswordCheckDto passwordCheckDto2 = noticeService.passwordCheck(passwordCheckDto);
-        return passwordCheckDto2.isResult();
-    }
 
     //게시글 수정
-    @PutMapping("/notice/detail/change")
+    @PatchMapping("/notice/detail/change")
     public String noticeChange(@RequestBody NoticeChangeDto noticeChangeDto){
         noticeService.noticeChange(noticeChangeDto);
         return "1";

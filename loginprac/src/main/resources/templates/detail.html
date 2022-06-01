@@ -75,13 +75,15 @@
             border: 2px solid black;
         }
 
-        #changediv{
+        #changediv {
             display: none;
         }
-        #changediv2{
+
+        #changediv2 {
             display: none;
         }
-        #commentdiv{
+
+        #commentdiv {
             display: none;
         }
     </style>
@@ -102,11 +104,38 @@
             commentView()
             personalcheck()
         });
+
         function gotolist() {
             window.location.href = "/"
         }
 
-        function personalcheck(){
+        function changepost() {
+            $("#changediv2").show()
+        }
+
+        function changewrite(){
+            let id = $("#id").text()
+            let changetitle = $("#changetitle").val()
+            let changedesc = $("#changedesc").val()
+            let jsonData = { // Body에 첨부할 json 데이터
+                "id":id,
+                "title":changetitle,
+                "description":changedesc
+            };
+
+            $.ajax({
+                type: "PATCH",
+                url: '/notice/detail/change',
+                contentType: "application/json",
+                data: JSON.stringify(jsonData),
+                success: function (response) {
+                    alert("게시글이 수정 되었습니다.")
+                    window.location.reload()
+                }
+            })
+        }
+
+        function personalcheck() {
             let noticeuser = $("#noticeuser").text()
 
             $.ajax({
@@ -123,7 +152,7 @@
                         $("#deletebtn").show()
 
 
-                    }else{
+                    } else {
                         $("#changebtn").hide()
                         $("#deletebtn").hide()
 
@@ -133,28 +162,28 @@
                     $('#username').text(tokenname);
 
                 },
-                error: function() {
+                error: function () {
                     window.location.href = '/user/loginView';
                 }
             })
         }
 
 
-        function comment(){
+        function comment() {
             $("#commentdiv").show();
         }
 
 
-        function commentnotice(){
+        function commentnotice() {
             let date = new Date();
             let id = $("#id").text()
             let comment = $("#comment").val()
 
             let jsonData = { // Body에 첨부할 json 데이터
-                "id" : id,
+                "id": id,
                 "username": tokenname,
-                "comment":comment,
-                "date":date
+                "comment": comment,
+                "date": date
             };
             $.ajax({
                 type: "POST",
@@ -169,18 +198,18 @@
             })
         }
 
-        function commentView(){
+        function commentView() {
             let id = $("#id").text()
 
             $.ajax({
                 type: "GET",
-                url: '/notice/detail/comment/'+id,
+                url: '/notice/detail/comment/' + id,
                 success: function (response) {
-                    for(let i = 0; i < response.length; i++){
+                    for (let i = 0; i < response.length; i++) {
                         let username = response[i]['username']
                         let comment = response[i]['comment']
                         let date = response[i]['date']
-                        if(username == tokenname || username == "admin"){
+                        if (username == tokenname || username == "admin") {
                             let temp_html = `<div class="mb-2 card" >
                                             <div class="card-body">
                                                 <blockquote class="blockquote mb-0">
@@ -196,7 +225,7 @@
                                             </div>
                                         </div>`
                             $("#cardgroup").append(temp_html)
-                        }else{
+                        } else {
                             let temp_html = `<div class="mb-2 card" >
                                             <div class="card-body">
                                                 <blockquote class="blockquote mb-0">
@@ -210,19 +239,18 @@
                         }
 
 
-
                     }
-
 
 
                 }
             })
         }
-        function deletepost(){
+
+        function deletepost() {
             let id = $("#id").text()
             $.ajax({
                 type: "DELETE",
-                url: '/notice/detail/delete/'+id,
+                url: '/notice/detail/delete/' + id,
                 success: function (response) {
                     alert("성공적으로 삭제 되었습니다.")
                     window.location.href = "/"
@@ -244,7 +272,7 @@
                 <div class="card-body">
                     <blockquote th:each="lists : ${list}" class="blockquote mb-0">
                         <p id="id" style="display: none;" th:text="${lists.id}"></p>
-                        <p  th:text="${lists.title}"></p>
+                        <p th:text="${lists.title}"></p>
                         <p th:text="${lists.description}"></p>
                         <footer id="noticeuser" th:text="${lists.username}" class="blockquote-footer">작성자</footer>
                     </blockquote>
@@ -255,7 +283,7 @@
 
         <div class="btngroup">
             <button type="button" onclick="gotolist()" class="rcbtn">목록</button>
-            <button type="button" id="changebtn" onclick="passwordcheck()" class="rcbtn">수정</button>
+            <button type="button" id="changebtn" onclick="changepost()" class="rcbtn">수정</button>
             <button type="button" id="deletebtn" onclick="deletepost()" class="rcbtn">삭제</button>
             <button type="button" id="commentbtn" onclick="comment()" class="rcbtn">댓글</button>
 
@@ -263,7 +291,7 @@
 
 
     </div>
-    <div class="mypost" id = "changediv">
+    <div class="mypost" id="changediv">
 
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="username" placeholder="name@example.com">
@@ -281,13 +309,31 @@
             <label for="description">내용</label>
         </div>
 
-        <div class="btngroup">
-            <button type="button" class="rcbtn" onclick="changepost()">수정하기</button>
-        </div>
     </div>
-    <div class="mypost" id = "commentdiv">
 
-                <div class="form-floating">
+    <div class="mypost" id="changediv2">
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="changetitle" placeholder="name@example.com">
+            <label for="title">제목</label>
+        </div>
+
+        <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here"
+                                  id="changedesc"></textarea>
+            <label for="description">내용</label>
+        </div>
+
+
+        <div class="btngroup">
+            <button type="button" class="rcbtn" onclick="changewrite()">수정하기</button>
+        </div>
+
+
+    </div>
+    <div class="mypost" id="commentdiv">
+
+        <div class="form-floating">
                         <textarea class="form-control" placeholder="Leave a comment here"
                                   id="comment"></textarea>
             <label for="description">댓글을 작성하세요</label>
@@ -298,7 +344,7 @@
         </div>
     </div>
 
-    <div class="quotegroup" id = "cardgroup">
+    <div class="quotegroup" id="cardgroup">
 
     </div>
 </div>

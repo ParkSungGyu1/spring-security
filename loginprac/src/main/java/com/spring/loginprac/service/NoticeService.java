@@ -53,7 +53,6 @@ public class NoticeService {
                 .orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다."));
         notice.setDescription(noticeChangeDto.getDescription());
         notice.setTitle(noticeChangeDto.getTitle());
-        notice.setUsername(noticeChangeDto.getUsername());
         noticeRepository.save(notice);
     }
 
