@@ -83,5 +83,8 @@ public class NoticeService {
         comment.setComment(commentChangeDto.getComment());
         commentRepository.save(comment);
     }
+    public void commentDelete(Long id) {
+        commentRepository.delete(commentRepository.findById(id).orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다.")));
+    }
 
 }

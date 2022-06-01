@@ -55,6 +55,12 @@ public class NoticeController {
         return "1";
     }
 
+    @DeleteMapping("/notice/comment/delete/{id}")
+    public String commentDelete(@PathVariable Long id){
+        noticeService.commentDelete(id);
+        return "1";
+    }
+
     //저장 기능 ==> 저장이 완료 되었을 때 Http 상태를 리턴하고 싶다.
     @PostMapping("/notice/write")
     public String noticeWrite(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody NoticeWriteDto noticeWriteDto){

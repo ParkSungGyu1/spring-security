@@ -247,7 +247,7 @@
                                                     <footer class="commentuser blockquote-footer mt-2" >${username}</footer>
                                                     <div class="btngroup">
                                                         <button type="button" class="commentchangebtn rcbtn" onclick="commentchange(${i})">수정</button>
-                                                        <button type="button" class="commentdeletebtn rcbtn" onclick="">삭제</button>
+                                                        <button type="button" class="commentdeletebtn rcbtn" onclick="deletechange(${i})">삭제</button>
 
                                                     </div>
                                                 </blockquote>
@@ -274,7 +274,18 @@
                 }
             })
         }
+        function deletechange(n){
+            let id = $("#"+n).text()
+            $.ajax({
+                type: "DELETE",
+                url: '/notice/comment/delete/' + id,
+                success: function (response) {
+                    alert("성공적으로 삭제 되었습니다.")
+                    window.location.reload()
 
+                }
+            })
+        }
         function deletepost() {
             let id = $("#id").text()
             $.ajax({
