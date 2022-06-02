@@ -29,7 +29,7 @@ public class Comment {
     private String comment;
 
     @Column(nullable = false)
-    private Date date;
+    private String date;
 
     @ManyToOne
     @JsonManagedReference

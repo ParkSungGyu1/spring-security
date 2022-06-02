@@ -8,6 +8,8 @@ import com.spring.loginprac.repository.NoticeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,15 +40,6 @@ public class NoticeService {
         noticeRepository.save(notice);
     }
 
-    public PasswordCheckDto passwordCheck(PasswordCheckDto passwordCheckDto) {
-        Notice noticeDto = noticeRepository.findById(passwordCheckDto.getId())
-                .orElseThrow(() -> new NullPointerException("해당 아이디가 존재하지 않습니다."));
-
-
-        return passwordCheckDto;
-    }
-
-
 
     public void noticeChange(NoticeChangeDto noticeChangeDto) {
         Notice notice = noticeRepository.findById(noticeChangeDto.getId())
@@ -65,16 +58,21 @@ public class NoticeService {
 
     public List<Comment> commentView(Long id) {
         Notice notice = noticeRepository.findById(id).get();
-        return commentRepository.findCommentsByNotice(notice);
+
+        return commentRepository.findCommentsByNoticeOrderByDateDesc(notice);
     }
 
     public void commentWrite(CommentRequestDto commentRequestDto) {
         Optional<Notice> notice = noticeRepository.findById(commentRequestDto.getId());
         Comment comment = new Comment();
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd, HH:mm:ss");
         comment.setNotice(notice.get());
         comment.setComment(commentRequestDto.getComment());
         comment.setUsername(commentRequestDto.getUsername());
-        comment.setDate(commentRequestDto.getDate());
+        comment.setDate(format.format(date));
+
+
         commentRepository.save(comment);
     }
     public void commentChange(CommentChangeDto commentChangeDto) {
