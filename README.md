@@ -95,6 +95,9 @@ comment 작성 - notice 발동 - comment 발동- notice 발동.... 이런식으�
 
 <br>
 사이트 주소
+아니 왜 배포가 안돼 ㅁㄴㅇㄻㄴㅇㅀㄴㅇㅀ
 
+webSecurity가 Bean을 생성하지 몬하자너~~~~
+근데 로컬에선 잘 되자너~~~~
 
 
