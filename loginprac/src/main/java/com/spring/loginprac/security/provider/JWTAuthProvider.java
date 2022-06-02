@@ -15,13 +15,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class JWTAuthProvider implements AuthenticationProvider {
 
     private final JwtDecoder jwtDecoder;
 
     private final UserRepository userRepository;
 
+    public JWTAuthProvider(JwtDecoder jwtDecoder, UserRepository userRepository){
+        this.jwtDecoder = jwtDecoder;
+        this.userRepository = userRepository;
+    }
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
