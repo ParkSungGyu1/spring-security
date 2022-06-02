@@ -118,6 +118,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/images/**");
         skipPathList.add("GET,/css/**");
 
+        skipPathList.add("GET,/notice/**");
+        skipPathList.add("GET,/");
+
         // h2-console 허용
         skipPathList.add("GET,/h2-console/**");
         skipPathList.add("POST,/h2-console/**");
@@ -125,9 +128,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/user/**");
         skipPathList.add("POST,/user/signup");
 
-        skipPathList.add("GET,/notice/**");
-
-        skipPathList.add("GET,/");
         skipPathList.add("GET,/basic.js");
 
         skipPathList.add("GET,/favicon.ico");
